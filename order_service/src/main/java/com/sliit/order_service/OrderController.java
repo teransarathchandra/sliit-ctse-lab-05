@@ -30,8 +30,8 @@ public class OrderController {
 
     @PostMapping
     public synchronized ResponseEntity<Void> createOrder(@RequestBody Map<String, Object> request) {
-        if (request.get("itemId") == null) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "'itemId' is required");
+        if (request.get("item") == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "'item' is required");
         }
         if (request.get("quantity") == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "'quantity' is required");
