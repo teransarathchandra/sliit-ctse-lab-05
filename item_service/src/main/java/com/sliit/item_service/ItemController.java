@@ -29,7 +29,7 @@ public class ItemController {
     }
 
     @PostMapping
-    public synchronized ResponseEntity<Map<String, Object>> createItem(@RequestBody Map<String, Object> request) {
+    public synchronized ResponseEntity<Void> createItem(@RequestBody Map<String, Object> request) {
         String name = (String) request.get("name");
         if (name == null || name.isBlank()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "'name' is required and must not be blank");
@@ -39,7 +39,7 @@ public class ItemController {
         item.put("id", nextId++);
         item.put("name", name.trim());
         items.add(item);
-        return ResponseEntity.status(HttpStatus.CREATED).body(item);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @GetMapping("/{id}")

@@ -29,7 +29,7 @@ public class OrderController {
     }
 
     @PostMapping
-    public synchronized ResponseEntity<Map<String, Object>> createOrder(@RequestBody Map<String, Object> request) {
+    public synchronized ResponseEntity<Void> createOrder(@RequestBody Map<String, Object> request) {
         if (request.get("itemId") == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "'itemId' is required");
         }
@@ -41,7 +41,7 @@ public class OrderController {
         order.put("id", nextId++);
         order.put("status", "PENDING");
         orders.add(order);
-        return ResponseEntity.status(HttpStatus.CREATED).body(order);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @GetMapping("/{id}")

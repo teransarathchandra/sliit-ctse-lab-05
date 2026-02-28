@@ -29,7 +29,7 @@ public class PaymentController {
     }
 
     @PostMapping("/process")
-    public synchronized ResponseEntity<Map<String, Object>> processPayment(@RequestBody Map<String, Object> request) {
+    public synchronized ResponseEntity<Void> processPayment(@RequestBody Map<String, Object> request) {
         if (request.get("orderId") == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "'orderId' is required");
         }
@@ -41,7 +41,7 @@ public class PaymentController {
         payment.put("id", nextId++);
         payment.put("status", "SUCCESS");
         payments.add(payment);
-        return ResponseEntity.status(HttpStatus.CREATED).body(payment);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @GetMapping("/{id}")
