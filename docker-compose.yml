@@ -1,6 +1,7 @@
 services:
   item-service:
     build: ./item_service
+    container_name: item-service
     ports:
       - "8081:8081"
     networks:
@@ -8,6 +9,7 @@ services:
 
   order-service:
     build: ./order_service
+    container_name: order-service
     ports:
       - "8082:8082"
     networks:
@@ -15,6 +17,7 @@ services:
 
   payment-service:
     build: ./payment_service
+    container_name: payment-service
     ports:
       - "8083:8083"
     networks:
@@ -22,6 +25,7 @@ services:
 
   api-gateway:
     build: ./api_gateway
+    container_name: api-gateway
     ports:
       - "8080:8080"
     depends_on:
