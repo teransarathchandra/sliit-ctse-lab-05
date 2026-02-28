@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Objects;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -28,12 +29,19 @@ public class PaymentController {
     }
 
     @PostMapping("/process")
-    public synchronized Map<String, Object> processPayment(@RequestBody Map<String, Object> request) {
+    public synchronized ResponseEntity<Map<String, Object>> processPayment(@RequestBody Map<String, Object> request) {
+        if (request.get("orderId") == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "'orderId' is required");
+        }
+        if (request.get("amount") == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "'amount' is required");
+        }
+
         Map<String, Object> payment = new LinkedHashMap<>(request);
         payment.put("id", nextId++);
         payment.put("status", "SUCCESS");
         payments.add(payment);
-        return payment;
+        return ResponseEntity.status(HttpStatus.CREATED).body(payment);
     }
 
     @GetMapping("/{id}")

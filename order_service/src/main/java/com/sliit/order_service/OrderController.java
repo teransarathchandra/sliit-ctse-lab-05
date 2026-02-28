@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Objects;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -28,12 +29,19 @@ public class OrderController {
     }
 
     @PostMapping
-    public synchronized Map<String, Object> createOrder(@RequestBody Map<String, Object> request) {
+    public synchronized ResponseEntity<Map<String, Object>> createOrder(@RequestBody Map<String, Object> request) {
+        if (request.get("itemId") == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "'itemId' is required");
+        }
+        if (request.get("quantity") == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "'quantity' is required");
+        }
+
         Map<String, Object> order = new LinkedHashMap<>(request);
         order.put("id", nextId++);
         order.put("status", "PENDING");
         orders.add(order);
-        return order;
+        return ResponseEntity.status(HttpStatus.CREATED).body(order);
     }
 
     @GetMapping("/{id}")

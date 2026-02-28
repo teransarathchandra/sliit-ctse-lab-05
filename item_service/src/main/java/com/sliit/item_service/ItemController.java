@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Objects;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -28,12 +29,17 @@ public class ItemController {
     }
 
     @PostMapping
-    public synchronized Map<String, Object> createItem(@RequestBody Map<String, Object> request) {
+    public synchronized ResponseEntity<Map<String, Object>> createItem(@RequestBody Map<String, Object> request) {
+        String name = (String) request.get("name");
+        if (name == null || name.isBlank()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "'name' is required and must not be blank");
+        }
+
         Map<String, Object> item = new LinkedHashMap<>();
         item.put("id", nextId++);
-        item.put("name", request.get("name"));
+        item.put("name", name.trim());
         items.add(item);
-        return item;
+        return ResponseEntity.status(HttpStatus.CREATED).body(item);
     }
 
     @GetMapping("/{id}")
